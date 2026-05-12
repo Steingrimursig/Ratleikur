@@ -160,7 +160,12 @@ function check() {
   inp.disabled = true;
 
   hint.style.display = 'block';
-  hintText.textContent = window._last ? '🏆 Þið hafið lokið ratleiknum – til hamingju!' : q.nx;
+  if (window._last) {
+    hintText.textContent = '🏆 Þið hafið lokið ratleiknum – til hamingju!';
+  } else {
+    const nextNum = stod + 1;
+    hintText.textContent = `Stöð ${nextNum}: ${q.nx}`;
+  }
 }
 
 render();
