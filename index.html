@@ -14,9 +14,12 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--gd); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
   .card { background: var(--wh); border-radius: var(--r); max-width: 420px; width: 100%; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
-  .card-header { background: var(--gm); padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-  .header-title { font-family: 'Fraunces', serif; font-size: 1.2rem; color: var(--wh); }
-  .stod-badge { background: rgba(255,255,255,0.18); color: var(--wh); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
+  .card-header { background: var(--gm); padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .header-title { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--wh); }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .stod-badge { background: rgba(255,255,255,0.18); color: var(--wh); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+  .score-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: var(--wh); font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 20px; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+  .score-btn:hover { background: rgba(255,255,255,0.25); }
   .progress-bar { height: 5px; background: rgba(0,0,0,0.08); }
   .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
   .card-body { padding: 1.75rem 1.5rem; }
@@ -37,6 +40,29 @@
   .next-hint { background: var(--goldp); border: 1.5px solid #e8c840; border-radius: 10px; padding: 1rem 1.1rem; }
   .next-hint-label { font-size: 0.72rem; font-weight: 700; color: #8a6500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px; }
   .next-hint-text { font-size: 1rem; font-weight: 600; color: #5a4000; line-height: 1.4; }
+
+  /* Stigatafla */
+  .score-screen { padding: 1.5rem; }
+  .score-header { text-align: center; margin-bottom: 1.5rem; }
+  .score-header h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--tx); margin-bottom: 0.4rem; }
+  .score-header p { font-size: 0.9rem; color: var(--txm); }
+  .score-summary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 1.25rem; }
+  .score-stat { background: var(--gp); border-radius: 10px; padding: 0.75rem 0.5rem; text-align: center; }
+  .score-stat .num { font-family: 'Fraunces', serif; font-size: 1.6rem; color: var(--gm); }
+  .score-stat .lbl { font-size: 0.7rem; font-weight: 600; color: var(--txm); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+  .score-list { display: flex; flex-direction: column; gap: 5px; max-height: 320px; overflow-y: auto; margin-bottom: 1.25rem; }
+  .score-row { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; background: #f9f9f9; font-size: 0.82rem; }
+  .score-row.r { background: #f0faf0; }
+  .score-row.w { background: #fff8f0; }
+  .score-icon { font-size: 1rem; flex-shrink: 0; width: 20px; text-align: center; }
+  .score-num { font-weight: 700; color: var(--txm); flex-shrink: 0; min-width: 22px; }
+  .score-q { flex: 1; color: var(--tx); line-height: 1.3; }
+  .score-ans { font-size: 0.75rem; color: var(--txm); flex-shrink: 0; text-align: right; max-width: 90px; line-height: 1.3; }
+  .back-btn { width: 100%; background: var(--gm); color: var(--wh); border: none; border-radius: 10px; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; }
+  .back-btn:hover { background: var(--gl); }
+  .empty-score { text-align: center; padding: 2rem 1rem; color: var(--txm); font-size: 0.9rem; line-height: 1.6; }
+
+  /* Welcome */
   .welcome-screen { padding: 2rem 1.5rem; text-align: center; }
   .welcome-emoji { font-size: 3rem; margin-bottom: 1rem; }
   .welcome-screen h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--tx); margin-bottom: 0.5rem; }
@@ -77,6 +103,16 @@ const Q = [
 ];
 
 const T = Q.length;
+const STORE_KEY = 'ratleikur_stig';
+
+function getStig() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveStig(stod, correct, userAnswer) {
+  const s = getStig();
+  if (!s[stod]) s[stod] = { correct, userAnswer, ts: Date.now() };
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch(e) {}
+}
 
 function getStod() {
   const p = new URLSearchParams(window.location.search);
@@ -92,13 +128,63 @@ function norm(s) {
     .replace(/[₂²2]/g,'2').replace(/[-\s.,;:!?]/g,'').trim();
 }
 
+function showScore() {
+  const app = document.getElementById('app');
+  const stig = getStig();
+  const answered = Object.keys(stig).map(Number);
+  const correct = answered.filter(k => stig[k].correct);
+  const wrong = answered.filter(k => !stig[k].correct);
+  const pct = answered.length > 0 ? Math.round(correct.length / answered.length * 100) : 0;
+
+  let listHTML = '';
+  if (answered.length === 0) {
+    listHTML = '<div class="empty-score">Engar spurningar hafa verið svarað enn.<br>Skanaðu QR kóðann við fyrstu stöðina!</div>';
+  } else {
+    const sorted = answered.sort((a,b) => a-b);
+    listHTML = sorted.map(k => {
+      const q = Q[k-1];
+      const r = stig[k];
+      return `<div class="score-row ${r.correct ? 'r' : 'w'}">
+        <span class="score-icon">${r.correct ? '✅' : '❌'}</span>
+        <span class="score-num">${k}.</span>
+        <span class="score-q">${q.s.length > 45 ? q.s.slice(0,45)+'…' : q.s}</span>
+        <span class="score-ans">${r.correct ? q.sv : '<span style="color:#c07030">'+r.userAnswer+'</span>'}</span>
+      </div>`;
+    }).join('');
+  }
+
+  app.innerHTML = `
+    <div class="card-header">
+      <span class="header-title">🗺️ Ratleikurinn</span>
+      <button class="score-btn" onclick="render()">← Til baka</button>
+    </div>
+    <div class="score-screen">
+      <div class="score-header">
+        <h2>Stigataflan þín</h2>
+        <p>${answered.length} af ${T} spurningum svarað</p>
+      </div>
+      <div class="score-summary">
+        <div class="score-stat"><div class="num">${correct.length}</div><div class="lbl">Rétt</div></div>
+        <div class="score-stat"><div class="num">${wrong.length}</div><div class="lbl">Rangt</div></div>
+        <div class="score-stat"><div class="num">${pct}%</div><div class="lbl">Hlutfall</div></div>
+      </div>
+      <div class="score-list">${listHTML}</div>
+      <button class="back-btn" onclick="render()">Halda áfram í leikinn</button>
+    </div>`;
+}
+
 function render() {
   const stod = getStod();
   const app = document.getElementById('app');
 
   if (!stod) {
+    const stig = getStig();
+    const done = Object.keys(stig).length;
     app.innerHTML = `
-      <div class="card-header"><span class="header-title">🗺️ Ratleikurinn</span></div>
+      <div class="card-header">
+        <span class="header-title">🗺️ Ratleikurinn</span>
+        ${done > 0 ? `<button class="score-btn" onclick="showScore()">Stig: ${Object.values(stig).filter(x=>x.correct).length}/${done}</button>` : ''}
+      </div>
       <div class="welcome-screen">
         <div class="welcome-emoji">🗺️</div>
         <h2>Ratleikurinn</h2>
@@ -110,11 +196,17 @@ function render() {
 
   const q = Q[stod-1];
   const pct = Math.round(stod/T*100);
+  const stig = getStig();
+  const done = Object.keys(stig).length;
+  const correct = Object.values(stig).filter(x=>x.correct).length;
 
   app.innerHTML = `
     <div class="card-header">
       <span class="header-title">🗺️ Ratleikurinn</span>
-      <span class="stod-badge">Stöð ${stod} / ${T}</span>
+      <div class="header-right">
+        <span class="stod-badge">Stöð ${stod} / ${T}</span>
+        ${done > 0 ? `<button class="score-btn" onclick="showScore()">⭐ ${correct}/${done}</button>` : ''}
+      </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
     <div class="card-body">
@@ -122,7 +214,7 @@ function render() {
       <div class="question-text">${q.s}</div>
       <div class="answer-label">Svarið þitt</div>
       <input class="answer-input" type="text" id="inp" placeholder="Skrifaðu hér..." autocomplete="off">
-      <button class="check-btn" id="btn" onclick="check()">Staðfesta svar</button>
+      <button class="check-btn" id="btn" onclick="check(${stod})">Staðfesta svar</button>
       <div id="result" style="display:none" class="result-box"></div>
       <div id="hint" style="display:none" class="next-hint">
         <div class="next-hint-label">🧭 Næsta stöð</div>
@@ -130,11 +222,11 @@ function render() {
       </div>
     </div>`;
 
-  document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') check(); });
-  window._q = q; window._last = stod===T;
+  document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') check(stod); });
+  window._q = q; window._last = stod===T; window._stod = stod;
 }
 
-function check() {
+function check(stod) {
   const inp = document.getElementById('inp');
   const val = inp.value.trim();
   if (!val) return;
@@ -143,6 +235,8 @@ function check() {
   const userN = norm(val);
   const svN = norm(q.sv);
   const correct = userN === svN || svN.includes(userN) || userN.includes(svN);
+
+  saveStig(stod, correct, val);
 
   const result = document.getElementById('result');
   const hint = document.getElementById('hint');
@@ -159,12 +253,26 @@ function check() {
   document.getElementById('btn').disabled = true;
   inp.disabled = true;
 
+  // Update score button live
+  const stig = getStig();
+  const done = Object.keys(stig).length;
+  const correctCount = Object.values(stig).filter(x=>x.correct).length;
+  const headerRight = document.querySelector('.header-right');
+  if (headerRight) {
+    const existing = headerRight.querySelector('.score-btn');
+    if (existing) existing.remove();
+    const btn2 = document.createElement('button');
+    btn2.className = 'score-btn';
+    btn2.textContent = `⭐ ${correctCount}/${done}`;
+    btn2.onclick = showScore;
+    headerRight.appendChild(btn2);
+  }
+
   hint.style.display = 'block';
   if (window._last) {
-    hintText.textContent = '🏆 Þið hafið lokið ratleiknum – til hamingju!';
+    hintText.innerHTML = '🏆 Þið hafið lokið ratleiknum – til hamingju!';
   } else {
-    const nextNum = stod + 1;
-    hintText.textContent = `Stöð ${nextNum}: ${q.nx}`;
+    hintText.textContent = `Næsta er stöð ${stod + 1} — ${q.nx}`;
   }
 }
 
