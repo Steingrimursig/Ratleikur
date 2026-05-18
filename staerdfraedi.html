@@ -6,11 +6,7 @@
 <title>Stærðfræðiratleikurinn</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gd:#1a1a6e; --gm:#2d2d9e; --gl:#5a5ac8;
-    --gp:#ebebff; --gold:#d4a017; --goldp:#fdf3d0;
-    --tx:#1a1a1a; --txm:#666; --wh:#ffffff; --r:16px;
-  }
+  :root { --gd:#1a1a6e; --gm:#2d2d9e; --gl:#5a5ac8; --gp:#ebebff; --gold:#d4a017; --goldp:#fdf3d0; --tx:#1a1a1a; --txm:#666; --wh:#ffffff; --r:16px; }
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'DM Sans',sans-serif; background:var(--gd); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
   .card { background:var(--wh); border-radius:var(--r); max-width:420px; width:100%; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.4); }
@@ -44,13 +40,49 @@
   .stod-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
   .stod-link { background:var(--gp); color:var(--gm); text-decoration:none; font-size:0.8rem; font-weight:600; padding:6px 4px; border-radius:8px; display:block; text-align:center; }
   .stod-link:hover { background:var(--gm); color:white; }
+
 </style>
 </head>
 <body>
 <div class="card"><div id="app"></div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
 <script>
-const Q = [{"s":"Vilhjálmur Einarsson vann silfurverðlaun á Ólympíuleikunum í Melbourne 1956 þegar hann stökk 16,26 m í þrístökki. Hve langt var hvert stökk ef þau voru jafn löng?","sv":"5,42,5.42,5,43,5.43","st":"Eyjan – SS","nx":"Eyjan – SS"},{"s":"Talan er þriggja stafa tala sem er deilanleg með 7 en ekki með 2. Summa tölustafanna er 4.","sv":"301","st":"Eyjan – SS","nx":"Eyjan – SS"},{"s":"Lára, Linda og Lína ætla að skipta milli sín 165 kr. Hve mikið fær hver þeirra?","sv":"55","st":"Eyjan – SS","nx":"Eyjan – VV"},{"s":"Skipta á 139 nemendum í 5 manna körfuboltalið. Hvað verða liðin mörg? (Námunið upp í næstu heilu tölu)","sv":"28","st":"Eyjan – VV","nx":"Eyjan – VV"},{"s":"Áróra er mikill markaskorari í körfubolta. Hún fær 3 stig fyrir hvert skot í körfuna. Í einum leik skoraði hún 48 stig. Hve oft hitti hún í körfuna?","sv":"16","st":"Eyjan – VV","nx":"Eyjan – VV"},{"s":"Í neti eru fjórir æfingaboltar sem vega 1,5 kg hver. Hvað eru boltarnir þungir samtals?","sv":"6","st":"Eyjan – VV","nx":"Eyjan – AH"},{"s":"Hvað er 5,3 × 6,4 =","sv":"33,92,33.92","st":"Eyjan – AH","nx":"Eyjan – AH"},{"s":"Reiknaðu 3/5 + 1/4 =","sv":"17/20","st":"Eyjan – AH","nx":"Eyjan – AH"},{"s":"Erlingur Jóhannsson setti Íslandsmet þegar hann hljóp 800 m á 1:48,8 í Ósló 1987 (108,8 sek). Hve langan tíma var hann að hlaupa hverja 100 m ef hann hljóp jafn hratt?","sv":"13,6,13.6","st":"Eyjan – AH","nx":"Eyjan – gangur"},{"s":"Talan er þriggja stafa tala í 5-töflunni. Tölustafurinn í tugasætinu er þrefalt stærri en tölustafurinn í hundraðasætinu. Summa tölustafanna er 13.","sv":"265","st":"Eyjan – gangur","nx":"Eyjan – gangur"},{"s":"23 × 17 =","sv":"391","st":"Eyjan – gangur","nx":"Eyjan – gangur"},{"s":"Á fótboltamóti á að skipta 750 boðsmiðum milli sex íþróttafélaga. Hve marga miða fær hvert félag?","sv":"125","st":"Eyjan – gangur","nx":"Fyrir framan bókasafn"},{"s":"Birna fór einn daginn í göngu með skrefateljara. Þann dag gekk hún 4500 skref. Hve mörg skref gengur hún á viku ef hún gengur jafn langt á hverjum degi?","sv":"31500","st":"Fyrir framan bókasafn","nx":"Bókasafn"},{"s":"67 × 32 =","sv":"2144","st":"Bókasafn","nx":"Yngra unglingastig / miðstig"},{"s":"Elsa gengur um það bil 1800 skref í skólann og jafn mörg skref heim aftur. Hve mörg verða skrefin á einum mánuði (20 skóladagar)?","sv":"36000","st":"Yngra unglingastig / miðstig","nx":"Körfuboltavöllur"},{"s":"625 ÷ 5 =","sv":"125","st":"Körfuboltavöllur","nx":"Gervó"},{"s":"14,8 ÷ 4 =","sv":"3,7,3.7","st":"Gervó","nx":"Rusl"},{"s":"567 × 34 =","sv":"19278","st":"Rusl","nx":"Fánastöng"},{"s":"Hvað er 67 × 67?","sv":"4489","st":"Fánastöng","nx":"Eyjan – leikvöllur"},{"s":"552 ÷ 6 =","sv":"92","st":"Eyjan – leikvöllur","nx":"LOV – inngangur"},{"s":"45,6 × 23 =","sv":"1048,8,1048.8","st":"LOV – inngangur","nx":"Skólinn – inngangur"},{"s":"Börnin á Titanic voru 128, þeim var skipt í 4 björgunarbáta. Hvað fóru mörg börn í hvern bát?","sv":"32","st":"Skólinn – inngangur","nx":"Fyrir utan eyjuna – SS"},{"s":"Einar, Jökull og Sandra fóru saman í búð og keyptu sér snarl fyrir kósíkvöld. Allt snarlið kostaði 3544 krónur. Hve mikið borgar hver?","sv":"1181,1182","st":"Fyrir utan eyjuna – SS","nx":"Á bakvið eyjuna"},{"s":"Í 6. bekk í Grundaskóla eru 75 nemendur. Kennararnir ætla að skipta þeim í 4 manna hópa. Hvað eru hóparnir margir?","sv":"18,19","st":"Á bakvið eyjuna","nx":"Eyjan – SS"}];
+const firebaseConfig = {
+  databaseURL: "https://ratleikur-37ff2-default-rtdb.firebaseio.com/"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const Q = [
+  { s:"Vilhjálmur Einarsson vann silfurverðlaun á Ólympíuleikunum í Melbourne 1956 þegar hann stökk 16,26 m í þrístökki. Hve langt var hvert stökk ef þau voru jafn löng?", sv:"5,42,5.42,5,43,5.43", st:"Eyjan – SS", nx:"Eyjan – SS" },
+  { s:"Talan er þriggja stafa tala sem er deilanleg með 7 en ekki með 2. Summa tölustafanna er 4.", sv:"301", st:"Eyjan – SS", nx:"Eyjan – SS" },
+  { s:"Lára, Linda og Lína ætla að skipta milli sín 165 kr. Hve mikið fær hver þeirra?", sv:"55", st:"Eyjan – SS", nx:"Eyjan – VV" },
+  { s:"Skipta á 139 nemendum í 5 manna körfuboltalið. Hvað verða liðin mörg? (Námunið upp í næstu heilu tölu)", sv:"28", st:"Eyjan – VV", nx:"Eyjan – VV" },
+  { s:"Áróra er mikill markaskorari í körfubolta. Hún fær 3 stig fyrir hvert skot í körfuna. Í einum leik skoraði hún 48 stig. Hve oft hitti hún í körfuna?", sv:"16", st:"Eyjan – VV", nx:"Eyjan – VV" },
+  { s:"Í neti eru fjórir æfingaboltar sem vega 1,5 kg hver. Hvað eru boltarnir þungir samtals?", sv:"6", st:"Eyjan – VV", nx:"Eyjan – AH" },
+  { s:"Hvað er 5,3 × 6,4 =", sv:"33,92,33.92", st:"Eyjan – AH", nx:"Eyjan – AH" },
+  { s:"Reiknaðu 3/5 + 1/4 =", sv:"17/20", st:"Eyjan – AH", nx:"Eyjan – AH" },
+  { s:"Erlingur Jóhannsson setti Íslandsmet þegar hann hljóp 800 m á 1:48,8 í Ósló 1987 (108,8 sek). Hve langan tíma var hann að hlaupa hverja 100 m ef hann hljóp jafn hratt?", sv:"13,6,13.6", st:"Eyjan – AH", nx:"Eyjan – gangur" },
+  { s:"Talan er þriggja stafa tala í 5-töflunni. Tölustafurinn í tugasætinu er þrefalt stærri en tölustafurinn í hundraðasætinu. Summa tölustafanna er 13.", sv:"265", st:"Eyjan – gangur", nx:"Eyjan – gangur" },
+  { s:"23 × 17 =", sv:"391", st:"Eyjan – gangur", nx:"Eyjan – gangur" },
+  { s:"Á fótboltamóti á að skipta 750 boðsmiðum milli sex íþróttafélaga. Hve marga miða fær hvert félag?", sv:"125", st:"Eyjan – gangur", nx:"Fyrir framan bókasafn" },
+  { s:"Birna fór einn daginn í göngu með skrefateljara. Þann dag gekk hún 4500 skref. Hve mörg skref gengur hún á viku ef hún gengur jafn langt á hverjum degi?", sv:"31500", st:"Fyrir framan bókasafn", nx:"Bókasafn" },
+  { s:"67 × 32 =", sv:"2144", st:"Bókasafn", nx:"Yngra unglingastig / miðstig" },
+  { s:"Elsa gengur um það bil 1800 skref í skólann og jafn mörg skref heim aftur. Hve mörg verða skrefin á einum mánuði (20 skóladagar)?", sv:"36000", st:"Yngra unglingastig / miðstig", nx:"Körfuboltavöllur" },
+  { s:"625 ÷ 5 =", sv:"125", st:"Körfuboltavöllur", nx:"Gervó" },
+  { s:"14,8 ÷ 4 =", sv:"3,7,3.7", st:"Gervó", nx:"Rusl" },
+  { s:"567 × 34 =", sv:"19278", st:"Rusl", nx:"Fánastöng" },
+  { s:"Hvað er 67 × 67?", sv:"4489", st:"Fánastöng", nx:"Eyjan – leikvöllur" },
+  { s:"552 ÷ 6 =", sv:"92", st:"Eyjan – leikvöllur", nx:"LOV – inngangur" },
+  { s:"45,6 × 23 =", sv:"1048,8,1048.8", st:"LOV – inngangur", nx:"Skólinn – inngangur" },
+  { s:"Börnin á Titanic voru 128, þeim var skipt í 4 björgunarbáta. Hvað fóru mörg börn í hvern bát?", sv:"32", st:"Skólinn – inngangur", nx:"Fyrir utan eyjuna – SS" },
+  { s:"Einar, Jökull og Sandra fóru saman í búð og keyptu sér snarl fyrir kósíkvöld. Allt snarlið kostaði 3544 krónur. Hve mikið borgar hver?", sv:"1181,1182", st:"Fyrir utan eyjuna – SS", nx:"Á bakvið eyjuna" },
+  { s:"Í 6. bekk í Grundaskóla eru 75 nemendur. Kennararnir ætla að skipta þeim í 4 manna hópa. Hvað eru hóparnir margir?", sv:"18,19", st:"Á bakvið eyjuna", nx:"Eyjan – SS" }
+];
 const T = Q.length;
+
+let hopurNafn = null;
 
 function getStod() {
   const p = new URLSearchParams(window.location.search);
@@ -63,7 +95,7 @@ function norm(s) {
     .replace(/[áàâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[íìîï]/g,'i')
     .replace(/[óòôö]/g,'o').replace(/[úùûü]/g,'u').replace(/ý/g,'y')
     .replace(/ð/g,'d').replace(/þ/g,'th').replace(/æ/g,'ae')
-    .replace(/[,.]/g,'.').replace(/[-\s;:!?]/g,'').trim();
+    .replace(/[,\.]/g,'.').replace(/[-\s;:!?]/g,'').trim();
 }
 
 function checkAnswer(userVal, svStr) {
@@ -72,20 +104,32 @@ function checkAnswer(userVal, svStr) {
   return answers.some(a => a === user || a.includes(user) || user.includes(a));
 }
 
-function render() {
-  const stod = getStod();
+function logToFirebase(stod, correct, userVal) {
+  if (!hopurNafn) return;
+  const key = hopurNafn.replace(/[.#$/[\]]/g,'_');
+  db.ref('staerdfraedi/' + key + '/stod_' + stod).set({
+    stod: stod,
+    spurning: Q[stod-1].s,
+    svar: userVal,
+    rettSvar: Q[stod-1].sv.split(',')[0],
+    rett: correct,
+    timi: new Date().toISOString()
+  });
+  db.ref('staerdfraedi/' + key + '/info').set({
+    hopurNafn: hopurNafn,
+    sidastSvarad: stod,
+    sidastUpdated: new Date().toISOString()
+  });
+}
+
+function renderWelcome(stod) {
+  hopurNafn = 'Hópur ' + stod;
+  localStorage.setItem('ratleikur_hopur', hopurNafn);
+  renderQuestion(stod);
+}
+
+function renderQuestion(stod) {
   const app = document.getElementById('app');
-  if (!stod) {
-    app.innerHTML = `
-      <div class="card-header"><span class="header-title">🔢 Stærðfræðiratleikurinn</span></div>
-      <div class="welcome-screen">
-        <div class="welcome-emoji">🔢</div>
-        <h2>Stærðfræðiratleikurinn</h2>
-        <p>Skanna QR kóðann við hverja stöð til að opna spurninguna!</p>
-        <div class="stod-grid">${Array.from({length:T},(_,i)=>`<a href="?stod=${i+1}" class="stod-link">Stöð ${i+1}</a>`).join('')}</div>
-      </div>`;
-    return;
-  }
   const q = Q[stod-1];
   const pct = Math.round(stod/T*100);
   app.innerHTML = `
@@ -109,12 +153,30 @@ function render() {
   document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') check(stod); });
 }
 
+function render() {
+  const stod = getStod();
+  const app = document.getElementById('app');
+  if (!stod) {
+    app.innerHTML = `
+      <div class="card-header"><span class="header-title">🔢 Stærðfræðiratleikurinn</span></div>
+      <div class="welcome-screen">
+        <div class="welcome-emoji">🔢</div>
+        <h2>Stærðfræðiratleikurinn</h2>
+        <p>Skanna QR kóðann við hverja stöð til að opna spurninguna!</p>
+        <div class="stod-grid">${Array.from({length:T},(_,i)=>`<a href="?stod=${i+1}" class="stod-link">Stöð ${i+1}</a>`).join('')}</div>
+      </div>`;
+    return;
+  }
+  renderWelcome(stod);
+}
+
 function check(stod) {
   const inp = document.getElementById('inp');
   const val = inp.value.trim();
   if (!val) return;
   const q = Q[stod-1];
   const correct = checkAnswer(val, q.sv);
+  logToFirebase(stod, correct, val);
   const result = document.getElementById('result');
   if (correct) {
     result.className = 'result-box correct-box';
@@ -132,6 +194,7 @@ function check(stod) {
   document.getElementById('hint-text').textContent = `Stöð ${nextStod} — ${nextQ.st}`;
   document.getElementById('hint').style.display = 'block';
 }
+
 render();
 </script>
 </body>
