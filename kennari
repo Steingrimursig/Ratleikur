@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kennarasíða – Stærðfræðiratleikurinn</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:#f0f0f8; min-height:100vh; }
+
+  .top { background:#1a1a6e; color:white; padding:1.25rem 2rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+  .top h1 { font-family:'Fraunces',serif; font-size:1.4rem; }
+  .top p { font-size:0.85rem; opacity:0.75; }
+  .live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4ade80; margin-right:6px; animation:pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .stats-bar { background:white; border-bottom:1px solid #e0e0f0; padding:1rem 2rem; display:flex; gap:2rem; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat-val { font-family:'Fraunces',serif; font-size:1.8rem; color:#1a1a6e; }
+  .stat-lbl { font-size:0.72rem; color:#888; text-transform:uppercase; letter-spacing:0.05em; margin-top:2px; }
+
+  .main { padding:1.5rem 2rem; max-width:1100px; margin:0 auto; }
+
+  .empty { text-align:center; padding:4rem 2rem; color:#999; }
+  .empty p { font-size:1rem; margin-top:0.5rem; }
+
+  .groups-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:1rem; }
+
+  .group-card { background:white; border-radius:14px; border:2px solid #e0e0f0; overflow:hidden; }
+  .group-card.done { border-color:#4ade80; }
+  .group-header { background:#2d2d9e; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; }
+  .group-card.done .group-header { background:#16a34a; }
+  .group-name { font-family:'Fraunces',serif; font-size:1.1rem; color:white; }
+  .group-stod { font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:600; }
+
+  .group-progress { height:6px; background:#e0e0f0; }
+  .group-progress-fill { height:100%; background:#2d2d9e; transition:width 0.5s; }
+  .group-card.done .group-progress-fill { background:#16a34a; }
+
+  .group-body { padding:12px 16px; }
+  .group-meta { display:flex; gap:16px; margin-bottom:12px; }
+  .meta-item { font-size:0.8rem; color:#555; }
+  .meta-item strong { color:#1a1a1a; font-weight:600; }
+
+  .answers-list { display:flex; flex-direction:column; gap:4px; max-height:200px; overflow-y:auto; }
+  .answer-row { display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:6px; font-size:0.8rem; }
+  .answer-row.rett { background:#f0faf0; }
+  .answer-row.rangt { background:#fff8f0; }
+  .answer-icon { flex-shrink:0; font-size:0.9rem; }
+  .answer-stod { font-weight:700; color:#555; min-width:52px; }
+  .answer-q { flex:1; color:#333; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .answer-val { color:#888; font-size:0.75rem; flex-shrink:0; }
+
+  .done-badge { display:inline-block; background:#dcfce7; color:#16a34a; font-size:0.75rem; font-weight:700; padding:3px 10px; border-radius:20px; }
+
+  .refresh-btn { background:white; border:1px solid #c0c0e0; color:#1a1a6e; padding:6px 14px; border-radius:8px; font-size:0.85rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; }
+  .refresh-btn:hover { background:#f0f0ff; }
+
+  .ts { font-size:0.72rem; color:#aaa; margin-top:6px; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <h1>🔢 Stærðfræðiratleikurinn — Kennarasíða</h1>
+    <p><span class="live-dot"></span>Rauntíma yfirlit yfir alla hópa</p>
+  </div>
+  <button class="refresh-btn" onclick="location.reload()">↻ Uppfæra</button>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat"><div class="stat-val" id="s-hopar">0</div><div class="stat-lbl">Hópar skráðir</div></div>
+  <div class="stat"><div class="stat-val" id="s-lokid">0</div><div class="stat-lbl">Hópar loknir</div></div>
+  <div class="stat"><div class="stat-val" id="s-rett">0%</div><div class="stat-lbl">Rétt svör</div></div>
+  <div class="stat"><div class="stat-val" id="s-svör">0</div><div class="stat-lbl">Svör samtals</div></div>
+</div>
+
+<div class="main">
+  <div class="empty" id="empty-msg">
+    <div style="font-size:3rem">⏳</div>
+    <p>Bíður eftir hópum... Þegar foreldrar skanna fyrsta QR kóðann og skrifa nafn hópsins birtist hann hér.</p>
+  </div>
+  <div class="groups-grid" id="groups-grid" style="display:none"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-database-compat.min.js"></script>
+<script>
+const firebaseConfig = { databaseURL: "https://ratleikur-37ff2-default-rtdb.firebaseio.com/" };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const TOTAL = 24;
+
+function renderGroups(data) {
+  const grid = document.getElementById('groups-grid');
+  const empty = document.getElementById('empty-msg');
+
+  if (!data || Object.keys(data).length === 0) {
+    empty.style.display = 'block';
+    grid.style.display = 'none';
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.style.display = 'grid';
+
+  let totalHopar = 0, totalLokid = 0, totalRett = 0, totalSvör = 0;
+
+  const cards = Object.entries(data).map(([key, hopur]) => {
+    const info = hopur.info || {};
+    const name = info.hopurNafn || key;
+    const sidast = info.sidastSvarad || 0;
+    const pct = Math.round(sidast / TOTAL * 100);
+    const isDone = sidast >= TOTAL;
+
+    const answers = Object.entries(hopur)
+      .filter(([k]) => k.startsWith('stod_'))
+      .sort((a,b) => parseInt(a[0].replace('stod_','')) - parseInt(b[0].replace('stod_','')));
+
+    const rettCount = answers.filter(([,v]) => v.rett).length;
+    const rangCount = answers.length - rettCount;
+
+    totalHopar++;
+    if (isDone) totalLokid++;
+    totalRett += rettCount;
+    totalSvör += answers.length;
+
+    const answerRows = answers.slice(-6).reverse().map(([,v]) => `
+      <div class="answer-row ${v.rett ? 'rett' : 'rangt'}">
+        <span class="answer-icon">${v.rett ? '✅' : '❌'}</span>
+        <span class="answer-stod">Stöð ${v.stod}</span>
+        <span class="answer-q">${v.spurning ? v.spurning.slice(0,35)+'…' : ''}</span>
+        <span class="answer-val">${v.svar || ''}</span>
+      </div>`).join('');
+
+    const updated = info.sidastUpdated ? new Date(info.sidastUpdated).toLocaleTimeString('is-IS') : '';
+
+    return `
+    <div class="group-card ${isDone ? 'done' : ''}">
+      <div class="group-header">
+        <span class="group-name">${name}</span>
+        <span class="group-stod">${isDone ? '🏆 Lokið!' : 'Stöð ' + sidast + ' / ' + TOTAL}</span>
+      </div>
+      <div class="group-progress"><div class="group-progress-fill" style="width:${pct}%"></div></div>
+      <div class="group-body">
+        <div class="group-meta">
+          <div class="meta-item">✅ Rétt: <strong>${rettCount}</strong></div>
+          <div class="meta-item">❌ Rangt: <strong>${rangCount}</strong></div>
+          <div class="meta-item">📊 <strong>${answers.length > 0 ? Math.round(rettCount/answers.length*100) : 0}%</strong></div>
+        </div>
+        <div class="answers-list">${answerRows || '<div style="font-size:0.8rem;color:#aaa;padding:4px">Engin svör enn</div>'}</div>
+        ${updated ? `<div class="ts">Síðast uppfært: ${updated}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.innerHTML = cards;
+
+  document.getElementById('s-hopar').textContent = totalHopar;
+  document.getElementById('s-lokid').textContent = totalLokid;
+  document.getElementById('s-rett').textContent = totalSvör > 0 ? Math.round(totalRett/totalSvör*100)+'%' : '0%';
+  document.getElementById('s-svör').textContent = totalSvör;
+}
+
+db.ref('staerdfraedi').on('value', snap => {
+  renderGroups(snap.val());
+});
+</script>
+</body>
+</html>
