@@ -123,8 +123,13 @@ function logToFirebase(stod, correct, userVal) {
 }
 
 function renderWelcome(stod) {
-  hopurNafn = 'Hópur ' + stod;
-  localStorage.setItem('ratleikur_hopur', hopurNafn);
+  const saved = localStorage.getItem('ratleikur_hopur');
+  if (saved) {
+    hopurNafn = saved;
+  } else {
+    hopurNafn = 'Hópur ' + stod;
+    localStorage.setItem('ratleikur_hopur', hopurNafn);
+  }
   renderQuestion(stod);
 }
 
