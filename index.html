@@ -3,79 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Ratleikurinn</title>
+<title>Stærðfræðiratleikurinn</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gd: #1a3d1a; --gm: #2d6a2d; --gl: #4a9e4a;
-    --gp: #e8f5e8; --gold: #d4a017; --goldp: #fdf3d0;
-    --tx: #1a1a1a; --txm: #666; --wh: #ffffff; --r: 16px;
+    --gd:#1a1a6e; --gm:#2d2d9e; --gl:#5a5ac8;
+    --gp:#ebebff; --gold:#d4a017; --goldp:#fdf3d0;
+    --tx:#1a1a1a; --txm:#666; --wh:#ffffff; --r:16px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--gd); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
-  .card { background: var(--wh); border-radius: var(--r); max-width: 420px; width: 100%; overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.4); }
-  .card-header { background: var(--gm); padding: 1.1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
-  .header-title { font-family: 'Fraunces', serif; font-size: 1.15rem; color: var(--wh); }
-  .stod-badge { background: rgba(255,255,255,0.18); color: var(--wh); font-size: 0.75rem; font-weight: 600; padding: 4px 12px; border-radius: 20px; }
-  .progress-bar { height: 5px; background: rgba(0,0,0,0.08); }
-  .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
-  .card-body { padding: 1.75rem 1.5rem; }
-  .location-tag { display: inline-flex; align-items: center; gap: 6px; background: var(--gp); color: var(--gm); font-size: 0.78rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; margin-bottom: 1.25rem; }
-  .question-text { font-family: 'Fraunces', serif; font-size: 1.35rem; color: var(--tx); line-height: 1.45; margin-bottom: 1.5rem; }
-  .answer-label { font-size: 0.75rem; font-weight: 600; color: var(--txm); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
-  .answer-input { width: 100%; padding: 0.85rem 1rem; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 1rem; font-family: 'DM Sans', sans-serif; color: var(--tx); outline: none; transition: border-color 0.2s; margin-bottom: 1rem; }
-  .answer-input:focus { border-color: var(--gl); }
-  .answer-input:disabled { background: #f5f5f5; color: #999; }
-  .check-btn { width: 100%; background: var(--gm); color: var(--wh); border: none; border-radius: 10px; padding: 0.9rem; font-size: 1rem; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: background 0.2s; margin-bottom: 1rem; }
-  .check-btn:hover:not(:disabled) { background: var(--gl); }
-  .check-btn:disabled { background: #ccc; cursor: default; }
-  .result-box { border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; }
-  .correct-box { background: #f0faf0; border: 1.5px solid #4a9e4a; }
-  .wrong-box { background: #fff8f0; border: 1.5px solid #e0a050; }
-  .result-title { font-weight: 600; font-size: 0.95rem; color: var(--tx); }
-  .result-answer { font-size: 0.88rem; color: var(--txm); margin-top: 5px; }
-  .next-hint { background: var(--goldp); border: 1.5px solid #e8c840; border-radius: 10px; padding: 1rem 1.1rem; }
-  .next-hint-label { font-size: 0.72rem; font-weight: 700; color: #8a6500; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 6px; }
-  .next-hint-text { font-size: 1rem; font-weight: 600; color: #5a4000; line-height: 1.4; }
-  .welcome-screen { padding: 2rem 1.5rem; text-align: center; }
-  .welcome-emoji { font-size: 3rem; margin-bottom: 1rem; }
-  .welcome-screen h2 { font-family: 'Fraunces', serif; font-size: 1.5rem; color: var(--tx); margin-bottom: 0.5rem; }
-  .welcome-screen p { color: var(--txm); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5; }
-  .stod-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  .stod-link { background: var(--gp); color: var(--gm); text-decoration: none; font-size: 0.8rem; font-weight: 600; padding: 6px 4px; border-radius: 8px; display: block; text-align: center; }
-  .stod-link:hover { background: var(--gm); color: white; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',sans-serif; background:var(--gd); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
+  .card { background:var(--wh); border-radius:var(--r); max-width:420px; width:100%; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,0.4); }
+  .card-header { background:var(--gm); padding:1.1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+  .header-title { font-family:'Fraunces',serif; font-size:1.15rem; color:var(--wh); }
+  .stod-badge { background:rgba(255,255,255,0.18); color:var(--wh); font-size:0.75rem; font-weight:600; padding:4px 12px; border-radius:20px; }
+  .progress-bar { height:5px; background:rgba(0,0,0,0.08); }
+  .progress-fill { height:100%; background:var(--gold); transition:width 0.4s ease; }
+  .card-body { padding:1.75rem 1.5rem; }
+  .location-tag { display:inline-flex; align-items:center; gap:6px; background:var(--gp); color:var(--gm); font-size:0.78rem; font-weight:600; padding:5px 12px; border-radius:20px; margin-bottom:1.25rem; }
+  .question-text { font-family:'Fraunces',serif; font-size:1.3rem; color:var(--tx); line-height:1.45; margin-bottom:1.5rem; }
+  .answer-label { font-size:0.75rem; font-weight:600; color:var(--txm); letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .answer-input { width:100%; padding:0.85rem 1rem; border:2px solid #e0e0e0; border-radius:10px; font-size:1rem; font-family:'DM Sans',sans-serif; color:var(--tx); outline:none; transition:border-color 0.2s; margin-bottom:1rem; }
+  .answer-input:focus { border-color:var(--gl); }
+  .answer-input:disabled { background:#f5f5f5; color:#999; }
+  .check-btn { width:100%; background:var(--gm); color:var(--wh); border:none; border-radius:10px; padding:0.9rem; font-size:1rem; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; transition:background 0.2s; margin-bottom:1rem; }
+  .check-btn:hover:not(:disabled) { background:var(--gl); }
+  .check-btn:disabled { background:#ccc; cursor:default; }
+  .result-box { border-radius:10px; padding:1rem 1.1rem; margin-bottom:1rem; }
+  .correct-box { background:#f0faf0; border:1.5px solid #4a9e4a; }
+  .wrong-box { background:#fff8f0; border:1.5px solid #e0a050; }
+  .result-title { font-weight:600; font-size:0.95rem; color:var(--tx); }
+  .result-answer { font-size:0.88rem; color:var(--txm); margin-top:5px; }
+  .next-hint { background:var(--goldp); border:1.5px solid #e8c840; border-radius:10px; padding:1rem 1.1rem; }
+  .next-hint-label { font-size:0.72rem; font-weight:700; color:#8a6500; letter-spacing:0.07em; text-transform:uppercase; margin-bottom:6px; }
+  .next-hint-text { font-size:1rem; font-weight:600; color:#5a4000; line-height:1.4; }
+  .welcome-screen { padding:2rem 1.5rem; text-align:center; }
+  .welcome-emoji { font-size:3rem; margin-bottom:1rem; }
+  .welcome-screen h2 { font-family:'Fraunces',serif; font-size:1.5rem; color:var(--tx); margin-bottom:0.5rem; }
+  .welcome-screen p { color:var(--txm); font-size:0.95rem; margin-bottom:1.5rem; line-height:1.5; }
+  .stod-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+  .stod-link { background:var(--gp); color:var(--gm); text-decoration:none; font-size:0.8rem; font-weight:600; padding:6px 4px; border-radius:8px; display:block; text-align:center; }
+  .stod-link:hover { background:var(--gm); color:white; }
 </style>
 </head>
 <body>
 <div class="card"><div id="app"></div></div>
 <script>
-const Q = [
-  { s:"Hvað heitir aðalpersónan úr Kollhnís?", sv:"Álfur", st:"Inni í sal", nx:"Inni í sal" },
-  { s:"Hvaða ár sökk Titanic?", sv:"1912", st:"Inni í sal", nx:"Bókasafn" },
-  { s:"Hvað eru mörg börn í árgangi 2014 í Grundaskóla?", sv:"75", st:"Bókasafn", nx:"Bókasafn" },
-  { s:"Hvað elskar Eiki, úr sögunni Kollhnís, að setja á matinn sinn?", sv:"Kökuskraut", st:"Bókasafn", nx:"Matsalur" },
-  { s:"Hvað heitir höfuðborg Grænlands?", sv:"Nuuk", st:"Matsalur", nx:"Matsalur" },
-  { s:"Hvaðan er rithöfundurinn Astrid Lindgren?", sv:"Svíþjóð", st:"Matsalur", nx:"Yngra unglingastig / miðstig" },
-  { s:"Hverjar eru náttúruauðlindir Noregs?", sv:"Olía, fiskur, vatn", st:"Yngra unglingastig / miðstig", nx:"Yngra unglingastig / miðstig" },
-  { s:"Reiknaðu 3/5 + 1/4 =", sv:"17/20", st:"Yngra unglingastig / miðstig", nx:"LOV álma – tónmennt" },
-  { s:"Hvað búa margir í Finnlandi?", sv:"5,6 milljónir", st:"LOV álman – tónmennt", nx:"LOV álman – smíði" },
-  { s:"Hvert er fjölmennasta trúarbragð heims?", sv:"Kristin trú, kristni", st:"LOV álman – smíði", nx:"Yngsta stig" },
-  { s:"Hvað er mamman í Fólkið í blokkinni kölluð?", sv:"Sjóla", st:"Yngsta stig", nx:"Yngsta stig" },
-  { s:"Hvaða vítamín færð þú m.a. úr sólinni?", sv:"D-vítamín,d, dvítamín", st:"Yngsta stig", nx:"Yngsta stig" },
-  { s:"Til hvaða lands er Álfur að fara í æfingaferð í Kollhnís?", sv:"Til Brasilíu", st:"Yngsta stig", nx:"Stjórnunarálma" },
-  { s:"Hvað kallast efsti hluti svepps?", sv:"Hattur", st:"Stjórnunarálma", nx:"Eyjan – AH" },
-  { s:"Til hvaða lands var Titanic að sigla?", sv:"Til Bandaríkjanna, usa", st:"Eyjan – AH", nx:"Eyjan – gangur" },
-  { s:"Hvað er Grundaskóli gamall?", sv:"45 ára – stofnaður 1981", st:"Eyjan – gangur", nx:"Eyjan – VV" },
-  { s:"Hvernig er efnatákn vatns skrifað í efnafræði?", sv:"H₂O", st:"Eyjan – VV", nx:"Eyjan – SS" },
-  { s:"Hvaða fáni er sá eini sem hefur hvorki hvítan, rauðan né bláin í sér?", sv:"Jamaica", st:"Eyjan – SS", nx:"Eyjan – kaffistofa" },
-  { s:"Hvað er 67 × 67?", sv:"4489", st:"Eyjan – kaffistofa", nx:"Eyjan – 5. bekkur" },
-  { s:"Þetta er stórt líffæri sem er hreinsistöð líkamans, hvaða líffæri er það?", sv:"Lifurin, lifrin", st:"Eyjan – 5. bekkur", nx:"Unglingagangur" },
-  { s:"Hvað heitir páfagaukurinn hans Óla í Fólkið í blokkinni?", sv:"Jakob", st:"Unglingagangur", nx:"Unglingagangur" },
-  { s:"Hvað voru mörg börn á Titanic?", sv:"128 börn", st:"Unglingagangur", nx:"Unglingagangur" },
-  { s:"Hvað eru margar fiskitegundir við Ísland", sv:"365", st:"Fyrir framan LOV álmuna", nx:"Stjórnunarálma" },
-  { s:"Hvaða Norðurland hefur elsta fána heims (í samfeldri notkun)?", sv:"Danmörk", st:"Fyrir framan salinn", nx:"Inni í sal" }
-];
-
+const Q = [{"s":"Vilhjálmur Einarsson vann silfurverðlaun á Ólympíuleikunum í Melbourne 1956 þegar hann stökk 16,26 m í þrístökki. Hve langt var hvert stökk ef þau voru jafn löng?","sv":"5,42,5.42,5,43,5.43","st":"Eyjan – SS","nx":"Eyjan – SS"},{"s":"Talan er þriggja stafa tala sem er deilanleg með 7 en ekki með 2. Summa tölustafanna er 4.","sv":"301","st":"Eyjan – SS","nx":"Eyjan – SS"},{"s":"Lára, Linda og Lína ætla að skipta milli sín 165 kr. Hve mikið fær hver þeirra?","sv":"55","st":"Eyjan – SS","nx":"Eyjan – VV"},{"s":"Skipta á 139 nemendum í 5 manna körfuboltalið. Hvað verða liðin mörg? (Námunið upp í næstu heilu tölu)","sv":"28","st":"Eyjan – VV","nx":"Eyjan – VV"},{"s":"Áróra er mikill markaskorari í körfubolta. Hún fær 3 stig fyrir hvert skot í körfuna. Í einum leik skoraði hún 48 stig. Hve oft hitti hún í körfuna?","sv":"16","st":"Eyjan – VV","nx":"Eyjan – VV"},{"s":"Í neti eru fjórir æfingaboltar sem vega 1,5 kg hver. Hvað eru boltarnir þungir samtals?","sv":"6","st":"Eyjan – VV","nx":"Eyjan – AH"},{"s":"Hvað er 5,3 × 6,4 =","sv":"33,92,33.92","st":"Eyjan – AH","nx":"Eyjan – AH"},{"s":"Reiknaðu 3/5 + 1/4 =","sv":"17/20","st":"Eyjan – AH","nx":"Eyjan – AH"},{"s":"Erlingur Jóhannsson setti Íslandsmet þegar hann hljóp 800 m á 1:48,8 í Ósló 1987 (108,8 sek). Hve langan tíma var hann að hlaupa hverja 100 m ef hann hljóp jafn hratt?","sv":"13,6,13.6","st":"Eyjan – AH","nx":"Eyjan – gangur"},{"s":"Talan er þriggja stafa tala í 5-töflunni. Tölustafurinn í tugasætinu er þrefalt stærri en tölustafurinn í hundraðasætinu. Summa tölustafanna er 13.","sv":"265","st":"Eyjan – gangur","nx":"Eyjan – gangur"},{"s":"23 × 17 =","sv":"391","st":"Eyjan – gangur","nx":"Eyjan – gangur"},{"s":"Á fótboltamóti á að skipta 750 boðsmiðum milli sex íþróttafélaga. Hve marga miða fær hvert félag?","sv":"125","st":"Eyjan – gangur","nx":"Fyrir framan bókasafn"},{"s":"Birna fór einn daginn í göngu með skrefateljara. Þann dag gekk hún 4500 skref. Hve mörg skref gengur hún á viku ef hún gengur jafn langt á hverjum degi?","sv":"31500","st":"Fyrir framan bókasafn","nx":"Bókasafn"},{"s":"67 × 32 =","sv":"2144","st":"Bókasafn","nx":"Yngra unglingastig / miðstig"},{"s":"Elsa gengur um það bil 1800 skref í skólann og jafn mörg skref heim aftur. Hve mörg verða skrefin á einum mánuði (20 skóladagar)?","sv":"36000","st":"Yngra unglingastig / miðstig","nx":"Körfuboltavöllur"},{"s":"625 ÷ 5 =","sv":"125","st":"Körfuboltavöllur","nx":"Gervó"},{"s":"14,8 ÷ 4 =","sv":"3,7,3.7","st":"Gervó","nx":"Rusl"},{"s":"567 × 34 =","sv":"19278","st":"Rusl","nx":"Fánastöng"},{"s":"Hvað er 67 × 67?","sv":"4489","st":"Fánastöng","nx":"Eyjan – leikvöllur"},{"s":"552 ÷ 6 =","sv":"92","st":"Eyjan – leikvöllur","nx":"LOV – inngangur"},{"s":"45,6 × 23 =","sv":"1048,8,1048.8","st":"LOV – inngangur","nx":"Skólinn – inngangur"},{"s":"Börnin á Titanic voru 128, þeim var skipt í 4 björgunarbáta. Hvað fóru mörg börn í hvern bát?","sv":"32","st":"Skólinn – inngangur","nx":"Fyrir utan eyjuna – SS"},{"s":"Einar, Jökull og Sandra fóru saman í búð og keyptu sér snarl fyrir kósíkvöld. Allt snarlið kostaði 3544 krónur. Hve mikið borgar hver?","sv":"1181,1182","st":"Fyrir utan eyjuna – SS","nx":"Á bakvið eyjuna"},{"s":"Í 6. bekk í Grundaskóla eru 75 nemendur. Kennararnir ætla að skipta þeim í 4 manna hópa. Hvað eru hóparnir margir?","sv":"18,19","st":"Á bakvið eyjuna","nx":"Eyjan – SS"}];
 const T = Q.length;
 
 function getStod() {
@@ -89,31 +63,34 @@ function norm(s) {
     .replace(/[áàâä]/g,'a').replace(/[éèêë]/g,'e').replace(/[íìîï]/g,'i')
     .replace(/[óòôö]/g,'o').replace(/[úùûü]/g,'u').replace(/ý/g,'y')
     .replace(/ð/g,'d').replace(/þ/g,'th').replace(/æ/g,'ae')
-    .replace(/[₂²2]/g,'2').replace(/[-\s.,;:!?]/g,'').trim();
+    .replace(/[,.]/g,'.').replace(/[-\s;:!?]/g,'').trim();
+}
+
+function checkAnswer(userVal, svStr) {
+  const answers = svStr.split(',').map(a => norm(a.trim()));
+  const user = norm(userVal);
+  return answers.some(a => a === user || a.includes(user) || user.includes(a));
 }
 
 function render() {
   const stod = getStod();
   const app = document.getElementById('app');
-
   if (!stod) {
     app.innerHTML = `
-      <div class="card-header"><span class="header-title">🗺️ Ratleikurinn</span></div>
+      <div class="card-header"><span class="header-title">🔢 Stærðfræðiratleikurinn</span></div>
       <div class="welcome-screen">
-        <div class="welcome-emoji">🗺️</div>
-        <h2>Ratleikurinn</h2>
+        <div class="welcome-emoji">🔢</div>
+        <h2>Stærðfræðiratleikurinn</h2>
         <p>Skanna QR kóðann við hverja stöð til að opna spurninguna!</p>
         <div class="stod-grid">${Array.from({length:T},(_,i)=>`<a href="?stod=${i+1}" class="stod-link">Stöð ${i+1}</a>`).join('')}</div>
       </div>`;
     return;
   }
-
-  const q = Q[stod - 1];
-  const pct = Math.round(stod / T * 100);
-
+  const q = Q[stod-1];
+  const pct = Math.round(stod/T*100);
   app.innerHTML = `
     <div class="card-header">
-      <span class="header-title">🗺️ Ratleikurinn</span>
+      <span class="header-title">🔢 Stærðfræðiratleikurinn</span>
       <span class="stod-badge">Stöð ${stod} / ${T}</span>
     </div>
     <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -121,7 +98,7 @@ function render() {
       <div class="location-tag">📍 ${q.st}</div>
       <div class="question-text">${q.s}</div>
       <div class="answer-label">Svarið þitt</div>
-      <input class="answer-input" type="text" id="inp" placeholder="Skrifaðu hér..." autocomplete="off">
+      <input class="answer-input" type="text" id="inp" placeholder="Skrifaðu hér..." autocomplete="off" inputmode="decimal">
       <button class="check-btn" id="btn" onclick="check(${stod})">Staðfesta svar</button>
       <div id="result" style="display:none" class="result-box"></div>
       <div id="hint" style="display:none" class="next-hint">
@@ -129,36 +106,32 @@ function render() {
         <div class="next-hint-text" id="hint-text"></div>
       </div>
     </div>`;
-
-  document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') check(stod); });
+  document.getElementById('inp').addEventListener('keydown', e => { if(e.key==='Enter') check(stod); });
 }
 
 function check(stod) {
   const inp = document.getElementById('inp');
   const val = inp.value.trim();
   if (!val) return;
-
-  const q = Q[stod - 1];
-  const correct = norm(val) === norm(q.sv) || norm(q.sv).includes(norm(val)) || norm(val).includes(norm(q.sv));
-
+  const q = Q[stod-1];
+  const correct = checkAnswer(val, q.sv);
   const result = document.getElementById('result');
   if (correct) {
     result.className = 'result-box correct-box';
     result.innerHTML = '<div class="result-title">✅ Rétt! Vel gert!</div>';
   } else {
+    const firstAnswer = q.sv.split(',')[0];
     result.className = 'result-box wrong-box';
-    result.innerHTML = `<div class="result-title">🤔 Ekki alveg rétt</div><div class="result-answer">Rétt svar: ${q.sv}</div>`;
+    result.innerHTML = `<div class="result-title">🤔 Ekki alveg rétt</div><div class="result-answer">Rétt svar: ${firstAnswer}</div>`;
   }
   result.style.display = 'block';
   document.getElementById('btn').disabled = true;
   inp.disabled = true;
-
   const nextStod = stod === T ? 1 : stod + 1;
-  const nextQ = Q[nextStod - 1];
+  const nextQ = Q[nextStod-1];
   document.getElementById('hint-text').textContent = `Stöð ${nextStod} — ${nextQ.st}`;
   document.getElementById('hint').style.display = 'block';
 }
-
 render();
 </script>
 </body>
