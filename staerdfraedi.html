@@ -175,29 +175,49 @@ function render() {
   renderWelcome(stod);
 }
 
+let tilraunir = 0;
+
 function check(stod) {
   const inp = document.getElementById('inp');
   const val = inp.value.trim();
   if (!val) return;
   const q = Q[stod-1];
   const correct = checkAnswer(val, q.sv);
-  logToFirebase(stod, correct, val);
   const result = document.getElementById('result');
+
   if (correct) {
+    logToFirebase(stod, true, val);
     result.className = 'result-box correct-box';
     result.innerHTML = '<div class="result-title">✅ Rétt! Vel gert!</div>';
+    result.style.display = 'block';
+    document.getElementById('btn').disabled = true;
+    inp.disabled = true;
+    const nextStod = stod === T ? 1 : stod + 1;
+    const nextQ = Q[nextStod-1];
+    document.getElementById('hint-text').textContent = `Stöð ${nextStod} — ${nextQ.st}`;
+    document.getElementById('hint').style.display = 'block';
+    tilraunir = 0;
+  } else if (tilraunir === 0) {
+    tilraunir = 1;
+    result.className = 'result-box wrong-box';
+    result.innerHTML = '<div class="result-title">🤔 Þið fáið annað tækifæri — reynið aftur en hugsið þetta vandlega!</div>';
+    result.style.display = 'block';
+    inp.value = '';
+    inp.focus();
   } else {
+    logToFirebase(stod, false, val);
     const firstAnswer = q.sv.split(',')[0];
     result.className = 'result-box wrong-box';
-    result.innerHTML = `<div class="result-title">🤔 Ekki alveg rétt</div><div class="result-answer">Rétt svar: ${firstAnswer}</div>`;
+    result.innerHTML = `<div class="result-title">❌ Ekki rétt</div><div class="result-answer">Rétt svar: ${firstAnswer}</div>`;
+    result.style.display = 'block';
+    document.getElementById('btn').disabled = true;
+    inp.disabled = true;
+    const nextStod = stod === T ? 1 : stod + 1;
+    const nextQ = Q[nextStod-1];
+    document.getElementById('hint-text').textContent = `Stöð ${nextStod} — ${nextQ.st}`;
+    document.getElementById('hint').style.display = 'block';
+    tilraunir = 0;
   }
-  result.style.display = 'block';
-  document.getElementById('btn').disabled = true;
-  inp.disabled = true;
-  const nextStod = stod === T ? 1 : stod + 1;
-  const nextQ = Q[nextStod-1];
-  document.getElementById('hint-text').textContent = `Stöð ${nextStod} — ${nextQ.st}`;
-  document.getElementById('hint').style.display = 'block';
 }
 
 render();
