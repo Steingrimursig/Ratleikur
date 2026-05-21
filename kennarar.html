@@ -115,13 +115,14 @@ function renderGroups(data) {
     const info = hopur.info || {};
     const name = info.hopurNafn || key;
     const sidast = info.sidastSvarad || 0;
-    const fjoldiSvarad = answers.length;
-    const pct = Math.round(fjoldiSvarad / TOTAL * 100);
-    const isDone = fjoldiSvarad >= TOTAL;
 
     const answers = Object.entries(hopur)
       .filter(([k]) => k.startsWith('stod_'))
       .sort((a,b) => parseInt(a[0].replace('stod_','')) - parseInt(b[0].replace('stod_','')));
+
+    const fjoldiSvarad = answers.length;
+    const pct = Math.round(fjoldiSvarad / TOTAL * 100);
+    const isDone = fjoldiSvarad >= TOTAL;
 
     const rettCount = answers.filter(([,v]) => v.rett).length;
     const rangCount = answers.length - rettCount;
