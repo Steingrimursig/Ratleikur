@@ -120,7 +120,7 @@ function renderGroups(data) {
       .filter(([k]) => k.startsWith('stod_'))
       .sort((a,b) => parseInt(a[0].replace('stod_','')) - parseInt(b[0].replace('stod_','')));
 
-    const fjoldiSvarad = answers.length;
+    const fjoldiSvarad = info.fjoldiSvarad || answers.length;
     const pct = Math.round(fjoldiSvarad / TOTAL * 100);
     const isDone = fjoldiSvarad >= TOTAL;
 
