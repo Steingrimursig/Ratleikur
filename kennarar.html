@@ -115,8 +115,9 @@ function renderGroups(data) {
     const info = hopur.info || {};
     const name = info.hopurNafn || key;
     const sidast = info.sidastSvarad || 0;
-    const pct = Math.round(sidast / TOTAL * 100);
-    const isDone = sidast >= TOTAL;
+    const fjoldiSvarad = answers.length;
+    const pct = Math.round(fjoldiSvarad / TOTAL * 100);
+    const isDone = fjoldiSvarad >= TOTAL;
 
     const answers = Object.entries(hopur)
       .filter(([k]) => k.startsWith('stod_'))
@@ -144,7 +145,7 @@ function renderGroups(data) {
     <div class="group-card ${isDone ? 'done' : ''}">
       <div class="group-header">
         <span class="group-name">${name}</span>
-        <span class="group-stod">${isDone ? '🏆 Lokið!' : 'Stöð ' + sidast + ' / ' + TOTAL}</span>
+        <span class="group-stod">${isDone ? '🏆 Lokið!' : fjoldiSvarad + ' / ' + TOTAL + ' spurningar'}</span>
       </div>
       <div class="group-progress"><div class="group-progress-fill" style="width:${pct}%"></div></div>
       <div class="group-body">
