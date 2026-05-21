@@ -130,13 +130,14 @@ function logToFirebase(stod, correct, userVal) {
 
 function renderWelcome(stod) {
   const saved = localStorage.getItem('ratleikur_byrjun');
-  // If this stod matches saved byrjun, keep the group name
-  // If different stod and no saved, this is the starting station
-  // Allow reset: if ?reset=1 in URL, clear and start fresh
-  const params = new URLSearchParams(window.location.search);
-  if (params.get('reset') === '1' || !saved) {
+  const savedDagur = localStorage.getItem('ratleikur_dagur');
+  const idagur = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+  // Clear if different day or no saved data
+  if (!saved || savedDagur !== idagur) {
     hopurNafn = 'Hópur ' + stod;
     localStorage.setItem('ratleikur_byrjun', stod);
+    localStorage.setItem('ratleikur_dagur', idagur);
   } else {
     hopurNafn = 'Hópur ' + saved;
   }
