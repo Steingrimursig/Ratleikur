@@ -120,9 +120,12 @@ function renderGroups(data) {
       .filter(([k]) => k.startsWith('stod_'))
       .sort((a,b) => parseInt(a[0].replace('stod_','')) - parseInt(b[0].replace('stod_','')));
 
-    const fjoldiSvarad = info.fjoldiSvarad || answers.length;
+    // Count unique stations answered (stod_1 through stod_24)
+    const stodirSvaradar = new Set(answers.map(([k]) => k));
+    const fjoldiSvarad = stodirSvaradar.size;
     const pct = Math.round(fjoldiSvarad / TOTAL * 100);
-    const isDone = fjoldiSvarad >= TOTAL;
+    // Only done when ALL 24 stations have been answered
+    const isDone = Array.from({length: TOTAL}, (_, i) => 'stod_' + (i+1)).every(k => stodirSvaradar.has(k));
 
     const rettCount = answers.filter(([,v]) => v.rett).length;
     const rangCount = answers.length - rettCount;
