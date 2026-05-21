@@ -101,7 +101,7 @@ function norm(s) {
 function checkAnswer(userVal, svStr) {
   const answers = svStr.split(',').map(a => norm(a.trim()));
   const user = norm(userVal);
-  return answers.some(a => a === user || a.includes(user) || user.includes(a));
+  return answers.some(a => a === user);
 }
 
 function logToFirebase(stod, correct, userVal) {
